@@ -15,7 +15,7 @@ import Foundation
 #if canImport(UIKit)
 import UIKit
 
-enum Haptic {
+public enum Haptic {
 	case success
 	case warning
 	case error
@@ -64,20 +64,19 @@ enum Haptic {
 		}
 	}
 	
-	func trigger() {
-		DispatchQueue.main.async {
-			if self.isUIImpact {
-				self.uiImpact?.impactOccurred()
-			} else {
-				switch self {
-				case .success:
-					UINotificationFeedbackGenerator().notificationOccurred(.success)
-				case .warning:
-					UINotificationFeedbackGenerator().notificationOccurred(.warning)
-				case .error:
-					UINotificationFeedbackGenerator().notificationOccurred(.error)
-				default: print("idk atp")
-				}
+	@MainActor
+	public func trigger() {
+		if self.isUIImpact {
+			self.uiImpact?.impactOccurred()
+		} else {
+			switch self {
+			case .success:
+				UINotificationFeedbackGenerator().notificationOccurred(.success)
+			case .warning:
+				UINotificationFeedbackGenerator().notificationOccurred(.warning)
+			case .error:
+				UINotificationFeedbackGenerator().notificationOccurred(.error)
+			default: print("idk atp")
 			}
 		}
 	}
